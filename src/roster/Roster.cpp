@@ -20,16 +20,25 @@ struct Employee {
 	void info() const;
 };
 
-void test();
-Employee *prompt(void);
+int form(Employee ***employees);
 
 int main ()
 {
-	test();
-	Employee *employee = prompt();
-	employee->info();
-	delete(employee);
-	employee = NULL;
+	Employee **employees = NULL;
+	int num_employees = form(&employees);
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->info();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		delete(employee);
+		employee = NULL;
+	}
+
+	free(employees);
+	employees = NULL;
 	return 0;
 }
 
@@ -41,7 +50,7 @@ static char *readline (char const *prompt_message)
 	return str;
 }
 
-Employee *prompt(void)
+static Employee *prompt(void)
 {
 	char *id = readline("input employee id:");
 	char *firstName = readline("input first name:");
@@ -56,6 +65,20 @@ Employee *prompt(void)
 					  position,
 					  basicSalary);
 	return employee;
+}
+
+int form(Employee ***employees)
+{
+	int num_employees = 0;
+	printf("input the number of employees:");
+	scanf("%d", &num_employees);
+	size_t const sz = num_employees * sizeof(Employee*);
+	*employees = (Employee**) malloc(sz);
+	Employee **iter = *employees;
+	for (int i = 0; i != num_employees; ++i) {
+		iter[i] = prompt();
+	}
+	return num_employees;
 }
 
 void test (void)
