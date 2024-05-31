@@ -9,6 +9,7 @@ struct Employee {
 	char *phoneNumber;
 	char *position;
 	char *basicSalary;
+	char *overtime;
 	char *extraWorkedHours;
 	char *loanDiscount;
 	char *voluntarySavings;
@@ -139,6 +140,7 @@ void Employee::operator delete(void *vp)
 	free(p->phoneNumber);
 	free(p->position);
 	free(p->basicSalary);
+	free(p->overtime);
 	free(p->extraWorkedHours);
 	free(p->loanDiscount);
 	free(p->voluntarySavings);
@@ -149,6 +151,7 @@ void Employee::operator delete(void *vp)
 	p->phoneNumber = NULL;
 	p->position = NULL;
 	p->basicSalary = NULL;
+	p->overtime = NULL;
 	p->extraWorkedHours = NULL;
 	p->loanDiscount = NULL;
 	p->voluntarySavings = NULL;
@@ -170,6 +173,7 @@ void Employee::logBasicInfo() const
 
 void Employee::promptWage()
 {
+	this->overtime = readline("input overtime paytment rate:");
 	this->extraWorkedHours = readline("input extra worked hours:");
 	this->loanDiscount = readline("input loan discount:");
 	this->voluntarySavings = readline("input voluntary savings:");
