@@ -8,24 +8,94 @@ struct Employee {
 	char *lastName;
 	char *phoneNumber;
 	char *position;
-	double *basicSalary;
+	char *basicSalary;
+	char *overtime;
+	char *extraWorkedHours;
+	char *loanDiscount;
+	char *voluntarySavings;
+	char *socialSecurityDiscount;
 	Employee(char *id,
 		 char *firstName,
 		 char *lastName,
 		 char *phoneNumber,
 		 char *position,
-		 double *basicSalary);
+		 char *basicSalary);
 	void *operator new(size_t size);
 	void operator delete(void *p);
-	void disp() const;
+	void promptWage();
+	void logBasicInfo() const;
+	void logWageInfo() const;
 };
 
-void test();
+int form(Employee ***employees);
 
 int main ()
 {
-	test();
+	Employee **employees = NULL;
+	int num_employees = form(&employees);
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->logBasicInfo();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->promptWage();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->logWageInfo();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		delete(employee);
+		employee = NULL;
+	}
+
+	free(employees);
+	employees = NULL;
 	return 0;
+}
+
+static char *readline (char const *prompt_message)
+{
+	char *str = NULL;
+	printf("%s", prompt_message);
+	scanf("%ms", &str);
+	return str;
+}
+
+static Employee *prompt(void)
+{
+	char *id = readline("input employee id:");
+	char *firstName = readline("input first name:");
+	char *lastName = readline("input last name:");
+	char *phoneNumber = readline("input phone number:");
+	char *position = readline("input position:");
+	char *basicSalary = readline("input basic salary:");
+	Employee *employee = new Employee(id,
+					  firstName,
+					  lastName,
+					  phoneNumber,
+					  position,
+					  basicSalary);
+	return employee;
+}
+
+int form(Employee ***employees)
+{
+	int num_employees = 0;
+	printf("input the number of employees:");
+	scanf("%d", &num_employees);
+	size_t const sz = num_employees * sizeof(Employee*);
+	*employees = (Employee**) malloc(sz);
+	Employee **iter = *employees;
+	for (int i = 0; i != num_employees; ++i) {
+		iter[i] = prompt();
+	}
+	return num_employees;
 }
 
 void test (void)
@@ -35,15 +105,14 @@ void test (void)
 	char *lastName = strdup("Last");
 	char *phoneNumber = strdup("999-999-9999");
 	char *position = strdup("position");
-	double *basicSalary = (double*) malloc(sizeof(double));
-	*basicSalary = 1.0;
+	char *basicSalary = strdup("1.0");
 	Employee *employee = new Employee(id,
 					  firstName,
 					  lastName,
 					  phoneNumber,
 					  position,
 					  basicSalary);
-	employee->disp();
+	employee->logBasicInfo();
 	delete(employee);
 	employee = NULL;
 }
@@ -53,7 +122,7 @@ Employee::Employee(char *id,
 		   char *lastName,
 		   char *phoneNumber,
 		   char *position,
-		   double *basicSalary)
+		   char *basicSalary)
 {
 	this->id = id;
 	this->firstName = firstName;
@@ -77,25 +146,53 @@ void Employee::operator delete(void *vp)
 	free(p->phoneNumber);
 	free(p->position);
 	free(p->basicSalary);
+	free(p->overtime);
+	free(p->extraWorkedHours);
+	free(p->loanDiscount);
+	free(p->voluntarySavings);
+	free(p->socialSecurityDiscount);
 	p->id = NULL;
 	p->firstName = NULL;
 	p->lastName = NULL;
 	p->phoneNumber = NULL;
 	p->position = NULL;
 	p->basicSalary = NULL;
+	p->overtime = NULL;
+	p->extraWorkedHours = NULL;
+	p->loanDiscount = NULL;
+	p->voluntarySavings = NULL;
+	p->socialSecurityDiscount = NULL;
 	free(p);
 	p = NULL;
 	vp = NULL;
 }
 
-void Employee::disp() const
+void Employee::logBasicInfo() const
 {
 	printf("id: %s\n", this->id);
 	printf("firstName: %s\n", this->firstName);
 	printf("lastName: %s\n", this->lastName);
 	printf("phoneNumber: %s\n", this->phoneNumber);
 	printf("position: %s\n", this->position);
-	printf("basicSalary: %lf\n", *this->basicSalary);
+	printf("basicSalary: %s\n", this->basicSalary);
+}
+
+void Employee::logWageInfo() const
+{
+	printf("overtime: %s\n", this->overtime);
+	printf("extraWorkedHours: %s\n", this->extraWorkedHours);
+	printf("loanDiscount: %s\n", this->loanDiscount);
+	printf("voluntarySavings: %s\n", this->voluntarySavings);
+	printf("socialSecurityDiscount: %s\n", this->socialSecurityDiscount);
+}
+
+void Employee::promptWage()
+{
+	this->overtime = readline("input overtime paytment rate:");
+	this->extraWorkedHours = readline("input extra worked hours:");
+	this->loanDiscount = readline("input loan discount:");
+	this->voluntarySavings = readline("input voluntary savings:");
+	this->socialSecurityDiscount = readline("input social security discount:");
 }
 
 /*
