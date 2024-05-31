@@ -9,7 +9,7 @@ struct Employee {
 	char *phoneNumber;
 	char *position;
 	char *basicSalary;
-	char *workedHours;
+	char *extraWorkedHours;
 	char *loanDiscount;
 	char *voluntarySavings;
 	char *socialSecurityDiscount;
@@ -21,6 +21,7 @@ struct Employee {
 		 char *basicSalary);
 	void *operator new(size_t size);
 	void operator delete(void *p);
+	void promptWage();
 	void basicInfo() const;
 };
 
@@ -33,6 +34,11 @@ int main ()
 	for (int i = 0; i != num_employees; ++i) {
 		Employee *employee = employees[i];
 		employee->basicInfo();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->promptWage();
 	}
 
 	for (int i = 0; i != num_employees; ++i) {
@@ -133,12 +139,20 @@ void Employee::operator delete(void *vp)
 	free(p->phoneNumber);
 	free(p->position);
 	free(p->basicSalary);
+	free(p->extraWorkedHours);
+	free(p->loanDiscount);
+	free(p->voluntarySavings);
+	free(p->socialSecurityDiscount);
 	p->id = NULL;
 	p->firstName = NULL;
 	p->lastName = NULL;
 	p->phoneNumber = NULL;
 	p->position = NULL;
 	p->basicSalary = NULL;
+	p->extraWorkedHours = NULL;
+	p->loanDiscount = NULL;
+	p->voluntarySavings = NULL;
+	p->socialSecurityDiscount = NULL;
 	free(p);
 	p = NULL;
 	vp = NULL;
@@ -152,6 +166,14 @@ void Employee::basicInfo() const
 	printf("phoneNumber: %s\n", this->phoneNumber);
 	printf("position: %s\n", this->position);
 	printf("basicSalary: %s\n", this->basicSalary);
+}
+
+void Employee::promptWage()
+{
+	this->extraWorkedHours = readline("input extra worked hours:");
+	this->loanDiscount = readline("input loan discount:");
+	this->voluntarySavings = readline("input voluntary savings:");
+	this->socialSecurityDiscount = readline("input social security discount:");
 }
 
 /*
