@@ -17,7 +17,7 @@ struct Employee {
 		 char *basicSalary);
 	void *operator new(size_t size);
 	void operator delete(void *p);
-	void disp() const;
+	void info() const;
 };
 
 void test();
@@ -27,7 +27,7 @@ int main ()
 {
 	test();
 	Employee *employee = prompt();
-	employee->disp();
+	employee->info();
 	delete(employee);
 	employee = NULL;
 	return 0;
@@ -72,7 +72,7 @@ void test (void)
 					  phoneNumber,
 					  position,
 					  basicSalary);
-	employee->disp();
+	employee->info();
 	delete(employee);
 	employee = NULL;
 }
@@ -117,7 +117,7 @@ void Employee::operator delete(void *vp)
 	vp = NULL;
 }
 
-void Employee::disp() const
+void Employee::info() const
 {
 	printf("id: %s\n", this->id);
 	printf("firstName: %s\n", this->firstName);
