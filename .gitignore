@@ -1,0 +1,6 @@
+*.tmp
+*.swp
+*.log
+*.err
+*.obj
+*.bin
