@@ -24,6 +24,7 @@ struct Employee {
 	void operator delete(void *p);
 	void promptWage();
 	void logBasicInfo() const;
+	void logWageInfo() const;
 };
 
 int form(Employee ***employees);
@@ -40,6 +41,11 @@ int main ()
 	for (int i = 0; i != num_employees; ++i) {
 		Employee *employee = employees[i];
 		employee->promptWage();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->logWageInfo();
 	}
 
 	for (int i = 0; i != num_employees; ++i) {
@@ -169,6 +175,15 @@ void Employee::logBasicInfo() const
 	printf("phoneNumber: %s\n", this->phoneNumber);
 	printf("position: %s\n", this->position);
 	printf("basicSalary: %s\n", this->basicSalary);
+}
+
+void Employee::logWageInfo() const
+{
+	printf("overtime: %s\n", this->overtime);
+	printf("extraWorkedHours: %s\n", this->extraWorkedHours);
+	printf("loanDiscount: %s\n", this->loanDiscount);
+	printf("voluntarySavings: %s\n", this->voluntarySavings);
+	printf("socialSecurityDiscount: %s\n", this->socialSecurityDiscount);
 }
 
 void Employee::promptWage()
