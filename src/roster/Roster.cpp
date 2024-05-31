@@ -20,7 +20,15 @@ struct Employee {
 	void disp() const;
 };
 
+void test();
+
 int main ()
+{
+	test();
+	return 0;
+}
+
+void test (void)
 {
 	char *id = strdup("1234-5678-9ABC-DEFG");
 	char *firstName = strdup("First");
@@ -38,7 +46,6 @@ int main ()
 	employee->disp();
 	delete(employee);
 	employee = NULL;
-	return 0;
 }
 
 Employee::Employee(char *id,
