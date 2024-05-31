@@ -22,7 +22,7 @@ struct Employee {
 	void *operator new(size_t size);
 	void operator delete(void *p);
 	void promptWage();
-	void basicInfo() const;
+	void logBasicInfo() const;
 };
 
 int form(Employee ***employees);
@@ -33,7 +33,7 @@ int main ()
 	int num_employees = form(&employees);
 	for (int i = 0; i != num_employees; ++i) {
 		Employee *employee = employees[i];
-		employee->basicInfo();
+		employee->logBasicInfo();
 	}
 
 	for (int i = 0; i != num_employees; ++i) {
@@ -105,7 +105,7 @@ void test (void)
 					  phoneNumber,
 					  position,
 					  basicSalary);
-	employee->basicInfo();
+	employee->logBasicInfo();
 	delete(employee);
 	employee = NULL;
 }
@@ -158,7 +158,7 @@ void Employee::operator delete(void *vp)
 	vp = NULL;
 }
 
-void Employee::basicInfo() const
+void Employee::logBasicInfo() const
 {
 	printf("id: %s\n", this->id);
 	printf("firstName: %s\n", this->firstName);
