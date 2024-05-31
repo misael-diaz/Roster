@@ -8,24 +8,54 @@ struct Employee {
 	char *lastName;
 	char *phoneNumber;
 	char *position;
-	double *basicSalary;
+	char *basicSalary;
 	Employee(char *id,
 		 char *firstName,
 		 char *lastName,
 		 char *phoneNumber,
 		 char *position,
-		 double *basicSalary);
+		 char *basicSalary);
 	void *operator new(size_t size);
 	void operator delete(void *p);
 	void disp() const;
 };
 
 void test();
+Employee *prompt(void);
 
 int main ()
 {
 	test();
+	Employee *employee = prompt();
+	employee->disp();
+	delete(employee);
+	employee = NULL;
 	return 0;
+}
+
+static char *readline (char const *prompt_message)
+{
+	char *str = NULL;
+	printf("%s", prompt_message);
+	scanf("%ms", &str);
+	return str;
+}
+
+Employee *prompt(void)
+{
+	char *id = readline("input employee id:");
+	char *firstName = readline("input first name:");
+	char *lastName = readline("input last name:");
+	char *phoneNumber = readline("input phone number:");
+	char *position = readline("input position:");
+	char *basicSalary = readline("input basic salary:");
+	Employee *employee = new Employee(id,
+					  firstName,
+					  lastName,
+					  phoneNumber,
+					  position,
+					  basicSalary);
+	return employee;
 }
 
 void test (void)
@@ -35,8 +65,7 @@ void test (void)
 	char *lastName = strdup("Last");
 	char *phoneNumber = strdup("999-999-9999");
 	char *position = strdup("position");
-	double *basicSalary = (double*) malloc(sizeof(double));
-	*basicSalary = 1.0;
+	char *basicSalary = strdup("1.0");
 	Employee *employee = new Employee(id,
 					  firstName,
 					  lastName,
@@ -53,7 +82,7 @@ Employee::Employee(char *id,
 		   char *lastName,
 		   char *phoneNumber,
 		   char *position,
-		   double *basicSalary)
+		   char *basicSalary)
 {
 	this->id = id;
 	this->firstName = firstName;
@@ -95,7 +124,7 @@ void Employee::disp() const
 	printf("lastName: %s\n", this->lastName);
 	printf("phoneNumber: %s\n", this->phoneNumber);
 	printf("position: %s\n", this->position);
-	printf("basicSalary: %lf\n", *this->basicSalary);
+	printf("basicSalary: %s\n", this->basicSalary);
 }
 
 /*
