@@ -14,6 +14,7 @@ struct Employee {
 	char *loanDiscount;
 	char *voluntarySavings;
 	char *socialSecurityDiscount;
+	double wage;
 	Employee(char *id,
 		 char *firstName,
 		 char *lastName,
@@ -25,6 +26,7 @@ struct Employee {
 	void logBasicInfo() const;
 	void logWageInfo() const;
 	void promptWage();
+	void calcWage();
 };
 
 int form(Employee ***employees);
@@ -41,6 +43,11 @@ int main ()
 	for (int i = 0; i != num_employees; ++i) {
 		Employee *employee = employees[i];
 		employee->promptWage();
+	}
+
+	for (int i = 0; i != num_employees; ++i) {
+		Employee *employee = employees[i];
+		employee->calcWage();
 	}
 
 	for (int i = 0; i != num_employees; ++i) {
@@ -184,6 +191,7 @@ void Employee::logWageInfo() const
 	printf("loanDiscount: %s\n", this->loanDiscount);
 	printf("voluntarySavings: %s\n", this->voluntarySavings);
 	printf("socialSecurityDiscount: %s\n", this->socialSecurityDiscount);
+	printf("wage: %lf\n", this->wage);
 }
 
 void Employee::promptWage()
@@ -193,6 +201,22 @@ void Employee::promptWage()
 	this->loanDiscount = readline("input loan discount:");
 	this->voluntarySavings = readline("input voluntary savings:");
 	this->socialSecurityDiscount = readline("input social security discount:");
+}
+
+void Employee::calcWage()
+{
+	double const basicSalary = atof(this->basicSalary);
+	double const overtime = atof(this->overtime);
+	double const extraWorkedHours = atof(this->extraWorkedHours);
+	double const loanDiscount = atof(this->loanDiscount);
+	double const voluntarySavings = atof(this->voluntarySavings);
+	double const socialSecurityDiscount = atof(this->socialSecurityDiscount);
+	double const wage = (basicSalary +
+			     overtime * extraWorkedHours -
+			     loanDiscount -
+			     voluntarySavings -
+			     socialSecurityDiscount);
+	this->wage = wage;
 }
 
 /*
