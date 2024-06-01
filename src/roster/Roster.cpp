@@ -36,11 +36,13 @@ int main ()
 	Employee **employees = NULL;
 	int num_employees = form(&employees);
 	for (int i = 0; i != num_employees; ++i) {
+		printf("basic info of employee No %d\n", i);
 		Employee *employee = employees[i];
 		employee->logBasicInfo();
 	}
 
 	for (int i = 0; i != num_employees; ++i) {
+		printf("input the wage info of employee No %d\n", i);
 		Employee *employee = employees[i];
 		employee->promptWage();
 	}
@@ -51,6 +53,7 @@ int main ()
 	}
 
 	for (int i = 0; i != num_employees; ++i) {
+		printf("wage info of employee No %d\n", i);
 		Employee *employee = employees[i];
 		employee->logWageInfo();
 	}
@@ -100,6 +103,7 @@ int form(Employee ***employees)
 	*employees = (Employee**) malloc(sz);
 	Employee **iter = *employees;
 	for (int i = 0; i != num_employees; ++i) {
+		printf("input the basic info of employee No %d\n", i);
 		iter[i] = prompt();
 	}
 	return num_employees;
