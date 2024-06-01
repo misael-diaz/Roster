@@ -14,6 +14,7 @@ struct Employee {
 	char *loanDiscount;
 	char *voluntarySavings;
 	char *socialSecurityDiscount;
+	double wage;
 	Employee(char *id,
 		 char *firstName,
 		 char *lastName,
@@ -22,9 +23,22 @@ struct Employee {
 		 char *basicSalary);
 	void *operator new(size_t size);
 	void operator delete(void *p);
-	void promptWage();
 	void logBasicInfo() const;
 	void logWageInfo() const;
+	void promptWage();
+	void calcWage();
+};
+
+struct Roster {
+	int num_employees;
+	Employee **employees;
+	Roster(int num_employees, Employee **employees);
+	void *operator new(size_t size);
+	void operator delete(void *p);
+	void logBasicInfo() const;
+	void logWageInfo() const;
+	void promptWage();
+	void calcWage();
 };
 
 int form(Employee ***employees);
@@ -33,29 +47,13 @@ int main ()
 {
 	Employee **employees = NULL;
 	int num_employees = form(&employees);
-	for (int i = 0; i != num_employees; ++i) {
-		Employee *employee = employees[i];
-		employee->logBasicInfo();
-	}
-
-	for (int i = 0; i != num_employees; ++i) {
-		Employee *employee = employees[i];
-		employee->promptWage();
-	}
-
-	for (int i = 0; i != num_employees; ++i) {
-		Employee *employee = employees[i];
-		employee->logWageInfo();
-	}
-
-	for (int i = 0; i != num_employees; ++i) {
-		Employee *employee = employees[i];
-		delete(employee);
-		employee = NULL;
-	}
-
-	free(employees);
-	employees = NULL;
+	Roster *roster = new Roster(num_employees, employees);
+	roster->logBasicInfo();
+	roster->promptWage();
+	roster->calcWage();
+	roster->logWageInfo();
+	delete(roster);
+	roster = NULL;
 	return 0;
 }
 
@@ -93,6 +91,7 @@ int form(Employee ***employees)
 	*employees = (Employee**) malloc(sz);
 	Employee **iter = *employees;
 	for (int i = 0; i != num_employees; ++i) {
+		printf("input the basic info of employee No %d\n", i);
 		iter[i] = prompt();
 	}
 	return num_employees;
@@ -184,6 +183,7 @@ void Employee::logWageInfo() const
 	printf("loanDiscount: %s\n", this->loanDiscount);
 	printf("voluntarySavings: %s\n", this->voluntarySavings);
 	printf("socialSecurityDiscount: %s\n", this->socialSecurityDiscount);
+	printf("wage: %lf\n", this->wage);
 }
 
 void Employee::promptWage()
@@ -193,6 +193,86 @@ void Employee::promptWage()
 	this->loanDiscount = readline("input loan discount:");
 	this->voluntarySavings = readline("input voluntary savings:");
 	this->socialSecurityDiscount = readline("input social security discount:");
+}
+
+void Employee::calcWage()
+{
+	double const basicSalary = atof(this->basicSalary);
+	double const overtime = atof(this->overtime);
+	double const extraWorkedHours = atof(this->extraWorkedHours);
+	double const loanDiscount = atof(this->loanDiscount);
+	double const voluntarySavings = atof(this->voluntarySavings);
+	double const socialSecurityDiscount = atof(this->socialSecurityDiscount);
+	double const wage = (basicSalary +
+			     overtime * extraWorkedHours -
+			     loanDiscount -
+			     voluntarySavings -
+			     socialSecurityDiscount);
+	this->wage = wage;
+}
+
+
+Roster::Roster(int num_employees, Employee **employees)
+{
+	this->num_employees = num_employees;
+	this->employees = employees;
+}
+
+void *Roster::operator new(size_t size)
+{
+	return malloc(size);
+}
+
+void Roster::operator delete(void *vp)
+{
+	Roster *p = (Roster*) vp;
+
+	for (int i = 0; i != p->num_employees; ++i) {
+		Employee *employee = p->employees[i];
+		delete(employee);
+		employee = NULL;
+	}
+
+	free(p->employees);
+	p->employees = NULL;
+	free(p);
+	p = NULL;
+	vp = NULL;
+}
+
+void Roster::promptWage()
+{
+	for (int i = 0; i != this->num_employees; ++i) {
+		printf("input the wage info of employee No %d\n", i);
+		Employee *employee = this->employees[i];
+		employee->promptWage();
+	}
+}
+
+void Roster::calcWage()
+{
+	for (int i = 0; i != this->num_employees; ++i) {
+		Employee *employee = this->employees[i];
+		employee->calcWage();
+	}
+}
+
+void Roster::logBasicInfo() const
+{
+	for (int i = 0; i != num_employees; ++i) {
+		printf("basic info of employee No %d\n", i);
+		Employee *employee = this->employees[i];
+		employee->logBasicInfo();
+	}
+}
+
+void Roster::logWageInfo() const
+{
+	for (int i = 0; i != this->num_employees; ++i) {
+		printf("wage info of employee No %d\n", i);
+		Employee *employee = this->employees[i];
+		employee->logWageInfo();
+	}
 }
 
 /*
