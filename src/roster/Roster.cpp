@@ -22,9 +22,9 @@ struct Employee {
 		 char *basicSalary);
 	void *operator new(size_t size);
 	void operator delete(void *p);
-	void promptWage();
 	void logBasicInfo() const;
 	void logWageInfo() const;
+	void promptWage();
 };
 
 int form(Employee ***employees);
